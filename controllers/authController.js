@@ -62,3 +62,30 @@ export const login = async (res, req) => {
 
 
 }
+
+
+export const refreshToken = async(req , res) => {
+    const {refreshToken} = req.body;
+    if(!refreshToken) {
+        return res.status(401).json({
+            message : "Refresh Token Required"
+        })
+    }
+
+    const user = await User.findOne(refreshToken)
+    if(!user) {
+        return res.status(401).json({
+            message: "Invalid Refresh Token"
+        })
+    }
+    const newAccessToken = generateToken(user)
+    const newRefreshToken = generaterefreshToken(user);
+
+    user.refreshToken = newRefreshToken;
+
+    await user.save()
+    res.status(200).json({
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      });
+}
