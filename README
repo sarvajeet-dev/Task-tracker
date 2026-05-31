@@ -1,0 +1,223 @@
+# Team Task Tracker API
+
+## Overview
+
+A REST API for managing tasks within an organization. The system supports authentication, role-based access control (RBAC), task management, status transitions, validation, and API documentation.
+
+---
+
+## Tech Stack
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* Zod Validation
+* Swagger/OpenAPI
+* Docker
+
+---
+
+## Features
+
+### Authentication
+
+* User Registration
+* User Login
+* JWT Access Token
+* Refresh Token Rotation
+
+### Authorization
+
+Roles Supported:
+
+* ADMIN
+* MANAGER
+* MEMBER
+
+Role Permissions:
+
+| Role    | Permissions                           |
+| ------- | ------------------------------------- |
+| ADMIN   | Full access to organization resources |
+| MANAGER | Manage projects and tasks             |
+| MEMBER  | View and update assigned tasks        |
+
+RBAC is enforced using middleware.
+
+---
+
+## Task Management
+
+### CRUD Operations
+
+* Create Task
+* Get Task
+* Update Task
+* Delete Task
+
+### Task Fields
+
+* title
+* description
+* priority
+* status
+* assignee
+* dueDate
+
+### Status Transition Rules
+
+Allowed transitions:
+
+TODO → IN_PROGRESS → IN_REVIEW → DONE
+
+Any active state → BLOCKED
+
+Only the assignee or a MANAGER can advance task status.
+
+---
+
+## Pagination & Filtering
+
+Supported query parameters:
+
+* page
+* limit
+* status
+* priority
+* assignee
+
+Example:
+
+GET /api/tasks?page=1&limit=10
+
+GET /api/tasks?status=TODO
+
+GET /api/tasks?priority=HIGH
+
+---
+
+## Validation
+
+Request validation is implemented using Zod.
+
+Example validation response:
+
+{
+"status": 400,
+"code": "VALIDATION_ERROR",
+"message": "Title is required"
+}
+
+---
+
+## Error Handling
+
+Consistent error responses are implemented across all endpoints.
+
+Example:
+
+{
+"status": 400,
+"code": "VALIDATION_ERROR",
+"message": "dueDate must be a future date"
+}
+
+---
+
+## Database Design
+
+### Collections
+
+#### User
+
+* name
+* email
+* password
+* role
+* organizationId
+* refreshToken
+
+#### Organization
+
+* name
+
+#### Task
+
+* title
+* description
+* priority
+* status
+* assignee
+* dueDate
+* createdBy
+* organizationId
+
+### Indexes
+
+Indexes added on:
+
+* status
+* assignee
+* dueDate
+
+### Design Decision
+
+Tasks reference Users and Organizations using ObjectId relationships rather than embedding data.
+
+This approach:
+
+* avoids duplication
+* improves maintainability
+* supports efficient querying across collections
+
+---
+
+## API Documentation
+
+Swagger UI available at:
+
+/api-docs
+
+---
+
+## Running Locally
+
+Install dependencies:
+
+npm install
+
+Start server:
+
+npm run dev
+
+---
+
+## Docker
+
+Build and run:
+
+docker compose up --build
+
+---
+
+## Future Improvements
+
+Given the assignment timeline, I prioritized implementing the core functionality and focused on correctness, security, and maintainability.
+
+With additional time, I would add:
+
+* Redis caching with cache invalidation
+* Integration tests
+* Analytics endpoint
+* WebSocket notifications
+* Advanced audit logging
+* Rate limiting
+* CI/CD pipeline
+
+---
+
+## Author
+
+Krishna Singh
