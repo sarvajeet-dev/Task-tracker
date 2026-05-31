@@ -15,7 +15,7 @@ export const generateToken = (user) =>{
    )
 }
 
-export const refreshToken = (user) => {
+export const generaterefreshToken = (user) => {
     return jwt.sign({
         id : user._id
 

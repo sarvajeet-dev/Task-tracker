@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User";
+import { generateToken, generateToken } from "../utils/jwt";
+import { generaterefreshToken } from "../utils/jwt";
 
 export const register = async (req, res) => {
     const { name, email, password, role, organisationId } = req.body;
@@ -25,5 +27,38 @@ export const register = async (req, res) => {
         message: "User created successfully",
         user,
     });
+
+}
+
+export const login = async (res, req) => {
+    const { email, password } = req.body;
+
+    const user = User.findOne(email)
+    if (!user) {
+        return res.status(401).json({
+            message: "Invalid credential"
+        })
+
+    }
+
+    const isMatched = await bcrypt.compare(password, user.password)
+
+    if (!isMatched) {
+        return res.status(401).json({
+            message: "Invalid credentials",
+        });
+    }
+    
+    const accessToken = generateToken(user)
+    const refreshToken = generaterefreshToken(user)
+    user.refreshToken = refreshToken 
+
+    await user.save()
+
+    res.status(200).json({
+        accessToken,
+        refreshToken,
+      });
+
 
 }
