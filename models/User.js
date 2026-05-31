@@ -3,25 +3,24 @@ import mongoose from "mongoose";
 const UserModelSchema = new mongoose.Schema({
     name : {
         type : String,
-        required
-    }, 
+       required: true    }, 
     email : {
         type : String,
-        required
+       required: true
     },
     password : {
         type : String , 
-        required
+       required: true
     } ,
     organisationId : {
         type: String ,
-        required
+       required: true
     },
     role : {
         type : String,
         enum : ["member" , "manager" , "admin"],
         default : "member",
-        required
+       required: true
     }
 
 })

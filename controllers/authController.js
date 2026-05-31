@@ -1,12 +1,12 @@
 import bcrypt from "bcryptjs";
-import User from "../models/User";
-import { generateToken, generateToken } from "../utils/jwt";
-import { generaterefreshToken } from "../utils/jwt";
+import User from "../models/User.js";
+import { generateToken , generaterefreshToken} from "../utils/jwt.js";
+
 
 export const register = async (req, res) => {
     const { name, email, password, role, organisationId } = req.body;
 
-    const existingUser = await User.findOne(email)
+    const existingUser = await User.findOne({email})
     if (existingUser) {
         return res.status(400).json({
             message: "User Already Exists"
@@ -72,7 +72,7 @@ export const refreshToken = async(req , res) => {
         })
     }
 
-    const user = await User.findOne(refreshToken)
+    const user = await User.findOne({refreshToken})
     if(!user) {
         return res.status(401).json({
             message: "Invalid Refresh Token"
